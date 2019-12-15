@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+
+<script src="./pixi.min.js"></script>
+<script>
+let app = new PIXI.Application({
+    width:window.innerWidth,
+    height:window.innerHeight,
+})
+document.body.appendChild(app.view);
+
+let img = new PIXI.Sprite.from('nik.jpg');
+img.width = window.innerWidth;
+// img.height = window.innerHeight;
+app.stage.addChild(img);
+
+let depthMap = new PIXI.Sprite.from('nik_depth.jpg');
+app.stage.addChild(depthMap);
+
+let blur = new PIXI.Sprite.from('blur.jpg');
+blur.width = img.width;
+blur.height = img.height;
+
+app.stage.addChild(blur);
+
+displacementfilter = new PIXI.filters.DisplacementFilter(depthMap);
+blurfilter = new PIXI.filters.DisplacementFilter(blur);
+
+app.stage.filters = [displacementfilter, blurfilter];
+
+window.onmousemove = function(e){
+    displacementfilter.scale.x = (window.innerWidth / 2 - e.clientX) / 20;
+    displacementfilter.scale.y = (window.innerHeight / 2 - e.clientY) / 20;
+}
+
+function animate() {
+      blurfilter.scale.x += 10;
+      blurfilter.scale.y += 4;
+      requestAnimationFrame(animate);
+      console.log(blurfilter);
+      
+}
+
+
+window.onclick = function(e){
+    animate();
+}
+
+</script>
+</html>
